@@ -6,8 +6,7 @@ import cv2
 import numpy as np
 import cvzone
 from cvzone.PoseModule import PoseDetector
-import threading
-import wikipediaapi
+
 
 
 
@@ -24,9 +23,9 @@ counterp = 0
 directionp = 0
 pd_pushup = PoseDetector(trackCon=0.70, detectionCon=0.70)
 pd_squat = PoseDetector(trackCon=0.70, detectionCon=0.70)
-
-cap_pushup = cv2.VideoCapture(0)
-cap_squat = cv2.VideoCapture(0)
+url = "http://192.168.1.2:8080/video"
+cap_pushup = cv2.VideoCapture(url)
+cap_squat = cv2.VideoCapture(url)
 if cap_pushup.isOpened():
     pass
 
