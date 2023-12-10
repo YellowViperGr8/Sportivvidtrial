@@ -40,113 +40,66 @@ import os
 #Push Up counter
 #Cv code
 
-def anglesp(lmlist,p1,p2,p3,p4,p5,p6,drawpoints):
-        global img
-        global counterp
-        global directionp
+def anglesp(lmlist, points, lines, drawpoints):
+    global img, counterp, directionp
 
-        if len(lmlist)!= 0:
-            point1 = lmlist[p1]
-            point2 = lmlist[p2]
-            point3 = lmlist[p3]
-            point4 = lmlist[p4]
-            point5 = lmlist[p5]
-            point6 = lmlist[p6]
+    if not lmlist:
+        return
 
-            x1, y1, _ = point1
-            x2, y2, _ = point2
-            x3, y3, _ = point3
-            x4, y4, _ = point4
-            x5, y5, _ = point5
-            x6, y6, _ = point6
+    for p in points:
+        cv2.circle(img, (p[0], p[1]), 10, (255, 0, 255), 5)
+        cv2.circle(img, (p[0], p[1]), 15, (0, 255, 0), 5)
 
-            if drawpoints == True:
-                cv2.circle(img,(x1,y1),10,(255,0,255),5)
-                cv2.circle(img, (x1, y1), 15, (0,255, 0),5)
-                cv2.circle(img, (x2, y2), 10, (255, 0, 255), 5)
-                cv2.circle(img, (x2, y2), 15, (0, 255, 0), 5)
-                cv2.circle(img, (x3, y3), 10, (255, 0, 255), 5)
-                cv2.circle(img, (x3, y3), 15, (0, 255, 0), 5)
-                cv2.circle(img, (x4, y4), 10, (255, 0, 255), 5)
-                cv2.circle(img, (x4, y4), 15, (0, 255, 0), 5)
-                cv2.circle(img, (x5, y5), 10, (255, 0, 255), 5)
-                cv2.circle(img, (x5, y5), 15, (0, 255, 0), 5)
-                cv2.circle(img, (x6, y6), 10, (255, 0, 255), 5)
-                cv2.circle(img, (x6, y6), 15, (0, 255, 0), 5)
+    if drawpoints:
+        for start, end, thickness in lines:
+            cv2.line(img, (points[start][0], points[start][1]), (points[end][0], points[end][1]), (0, 0, 255), thickness)
 
-                cv2.line(img,(x1,y1),(x2,y2),(0,0,255),6)
-                cv2.line(img, (x2,y2), (x3, y3), (0, 0, 255), 6)
-                cv2.line(img, (x4, y4), (x5, y5), (0, 0, 255), 6)
-                cv2.line(img, (x5, y5), (x6, y6), (0, 0, 255), 6)
-                cv2.line(img, (x1, y1), (x4, y4), (0, 0, 255), 6)
+    lefthandangle = math.degrees(math.atan2(points[2][1] - points[1][1], points[2][0] - points[1][0]) -
+                                 math.atan2(points[0][1] - points[1][1], points[0][0] - points[1][0]))
 
-            lefthandangle = math.degrees(math.atan2(y3 - y2, x3 - x2) -
-                                         math.atan2(y1 - y2, x1 - x2))
+    righthandangle = math.degrees(math.atan2(points[5][1] - points[4][1], points[5][0] - points[4][0]) -
+                                  math.atan2(points[3][1] - points[4][1], points[3][0] - points[4][0]))
 
-            righthandangle = math.degrees(math.atan2(y6 - y5, x6 - x5) -
-                                          math.atan2(y4 - y5, x4 - x5))
+    leftHandAngle = int(np.interp(lefthandangle, [-30, 180], [100, 0]))
+    rightHandAngle = int(np.interp(righthandangle, [34, 173], [100, 0]))
 
-            # print(lefthandangle,righthandangle)
+    left, right = leftHandAngle, rightHandAngle
 
-            leftHandAngle = int(np.interp(lefthandangle, [-30, 180], [100, 0]))
-            rightHandAngle = int(np.interp(righthandangle, [34, 173], [100, 0]))
+    if right >= 100 and directionp == 0:
+        counterp += 0.5
+        directionp = 1
 
-            left, right = leftHandAngle, rightHandAngle
+    if right <= 87 and directionp == 1:
+        counterp += 0.5
+        directionp = 0
 
-            if  right >= 100:
-                if directionp == 0:
-                    counterp += 0.5
-                    directionp = 1
-                    
-            if  right <= 87:
-                if directionp == 1:
-                    counterp += 0.5
-                    directionp = 0
+    cv2.rectangle(img, (0, 0), (120, 120), (255, 0, 0), -1)
+    cv2.putText(img, str(int(counterp)), (20, 70), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 1.6, (0, 0, 255), 7)
 
+    leftval = np.interp(right, [0, 100], [400, 200])
 
-            cv2.rectangle(img, (0, 0), (120, 120), (255, 0, 0), -1)
-            cv2.putText(img, str(int(counterp)), (20, 70), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 1.6, (0, 0, 255), 7)
+    if left > 70:
+        cv2.rectangle(img, (952, int(leftval)), (995, 400), (0, 0, 255), -1)
 
-            leftval  = np.interp(right,[0,100],[400,200])
-            rightval = np.interp(right, [0, 100], [400, 200])
+    if right > 70:
+        cv2.rectangle(img, (8, int(leftval)), (50, 400), (0, 0, 255), -1)
 
-         
-
-
-            if left > 70:
-                cv2.rectangle(img, (952, int(leftval)), (995, 400), (0, 0, 255), -1)
-
-            if right > 70:
-                cv2.rectangle(img, (8, int(leftval)), (50, 400), (0, 0, 255), -1)
-
-#pushup-counter function
 def process_videop():
-    global cap_pushup
-    global pd_pushup
-    global img
-    global counterp
-    global directionp
-    global video_access_event_pushup
+    global cap_pushup, pd_pushup, img, counterp, directionp, video_access_event_pushup
 
     while video_access_event_pushup.is_set():
-        ret, frame =cap_pushup.read()
+        ret, frame = cap_pushup.read()
 
         if ret:
-            # Flip the frame horizontally for a later selfie-view display
             frame = cv2.flip(frame, 1)
-
-            # Convert the BGR image to RGB
-           # rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-            # Process the frame with MediaPipe Pose
             img = cv2.resize(frame, (1000, 500))
             cvzone.putTextRect(img, 'AI Push Up Counter', [345, 30], thickness=2, border=2, scale=2.5)
             pd_pushup.findPose(img, draw=0)
-            lmlist, bbox = pd_pushup.findPosition(img, draw=0, bboxWithHands=0)
+            lmlist, _ = pd_pushup.findPosition(img, draw=0, bboxWithHands=0)
 
-            anglesp(lmlist, 11, 13, 15, 12, 14, 16, drawpoints=1)
+            anglesp(lmlist, [lmlist[p] for p in (11, 13, 15, 12, 14, 16)], [(11, 13, 6), (13, 15, 6), (12, 14, 6),
+                                                                           (14, 16, 6), (11, 12, 6)], drawpoints=1)
 
-            # Display the resulting frame
             _, jpeg = cv2.imencode('.jpg', img)
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
