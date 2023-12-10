@@ -3,4 +3,4 @@ Gunicorn
 cvzone
 mediapipe
 requests
-
+imutils
