@@ -4,6 +4,3 @@ cvzone
 mediapipe
 requests
 
-
-threading
-pygame
