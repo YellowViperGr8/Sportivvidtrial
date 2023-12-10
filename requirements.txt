@@ -4,6 +4,6 @@ cvzone
 mediapipe
 requests
 
-winsound
+
 threading
 pygame
