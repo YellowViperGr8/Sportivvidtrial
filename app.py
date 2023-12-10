@@ -111,115 +111,63 @@ def process_videop():
 #------------------------------------------------
 
 #Squat counter
-counters = 0
-directions = 0
-class angleFinder:
-    def __init__(self,lmlist,p1,p2,p3,p4,p5,p6,drawPoints):
-        self.lmlist = lmlist
-        self.p1 = p1
-        self.p2 = p2
-        self.p3 = p3
-        self.p4 = p4
-        self.p5 = p5
-        self.p6 = p6
-        self.drawPoints = drawPoints
-    #    finding angles
+counters, directions = 0, 0
+
+class AngleFinder:
+    def __init__(self, lmlist, p1, p2, p3, p4, p5, p6, drawPoints):
+        self.lmlist, self.p1, self.p2, self.p3, self.p4, self.p5, self.p6, self.drawPoints = lmlist, p1, p2, p3, p4, p5, p6, drawPoints
 
     def angles(self):
-        if self.lmlist is not None and len(self.lmlist) != 0:
-            point1 = self.lmlist[self.p1]
-            point2 = self.lmlist[self.p2]
-            point3 = self.lmlist[self.p3]
-            point4 = self.lmlist[self.p4]
-            point5 = self.lmlist[self.p5]
-            point6 = self.lmlist[self.p6]
+        if self.lmlist and len(self.lmlist) != 0:
+            points = [self.lmlist[p] for p in (self.p1, self.p2, self.p3, self.p4, self.p5, self.p6)]
+            x, y, _ = zip(*points)
 
-            x1, y1, _ = point1
-            x2, y2, _ = point2
-            x3, y3, _ = point3
-            x4, y4, _ = point4
-            x5, y5, _ = point5  
-            x6, y6, _ = point6
-
-            # calculating angle for left and right hands
-            leftHandAngle = math.degrees(math.atan2(y3 - y2, x3 - x2) -
-                                        math.atan2(y1 - y2, x1 - x2))
-            
-
+            leftHandAngle = math.degrees(math.atan2(y[2] - y[1], x[2] - x[1]) - math.atan2(y[0] - y[1], x[0] - x[1]))
             leftHandAngle = int(np.interp(leftHandAngle, [42, 143], [100, 0]))
-          
 
-            # drawing circles and lines on selected points
-            if self.drawPoints == True:
-                cv2.circle(imgs, (x1, y1), 10, (0, 255, 255), 5)
-                cv2.circle(imgs, (x1, y1), 15, (0, 255, 0), 6)
-                cv2.circle(imgs, (x2, y2), 10, (0, 255, 255), 5)
-                cv2.circle(imgs, (x2, y2), 15, (0, 255, 0), 6)
-                cv2.circle(imgs, (x3, y3), 10, (0, 255, 255), 5)
-                cv2.circle(imgs, (x3, y3), 15, (0, 255, 0), 6)
-                cv2.circle(imgs, (x4, y4), 10, (0, 255, 255), 5)
-                cv2.circle(imgs, (x4, y4), 15, (0, 255, 0), 6)
-                cv2.circle(imgs, (x5, y5), 10, (0, 255, 255), 5)
-                cv2.circle(imgs, (x5, y5), 15, (0, 255, 0), 6)
-                cv2.circle(imgs, (x6, y6), 10, (0, 255, 255), 5)
-                cv2.circle(imgs, (x6, y6), 15, (0, 255, 0), 6)
+            if self.drawPoints:
+                for i, j, thickness in [(0, 1, 6), (1, 2, 4), (3, 4, 6), (4, 5, 4), (0, 3, 6)]:
+                    cv2.circle(imgs, (x[i], y[i]), 10, (0, 255, 255), 5)
+                    cv2.circle(imgs, (x[i], y[i]), 15, (0, 255, 0), 6)
+                    cv2.line(imgs, (x[i], y[i]), (x[j], y[j]), (0, 0, 255), thickness)
 
-                cv2.line(imgs,(x1,y1),(x2,y2),(0,0,255),4)
-                cv2.line(imgs, (x2, y2), (x3, y3), (0, 0, 255), 4)
-                cv2.line(imgs, (x4, y4), (x5, y5), (0, 0, 255), 4)
-                cv2.line(imgs, (x5, y5), (x6, y6), (0, 0, 255), 4)
-                cv2.line(imgs, (x1, y1), (x4, y4), (0, 0, 255), 4)
-
-            return (leftHandAngle)
+            return leftHandAngle
         else:
             return 0
 
-# Function to process video frames for squat
 def process_videos():
-    global cap_squat
-    global pd_squat
-    global imgs
-    global counters
-    global directions
-    global video_access_event_squat
+    global cap_squat, pd_squat, imgs, counters, directions, video_access_event_squat
 
     while video_access_event_squat.is_set():
         ret, frame = cap_squat.read()
 
         if ret:
-            # Flip the frame horizontally for a later selfie-view display
             frame = cv2.flip(frame, 1)
-
             imgs = cv2.resize(frame, (1000, 500))
             cvzone.putTextRect(imgs, 'AI Squats Counter', [345, 30], thickness=2, border=2, scale=2.5)
             pd_squat.findPose(imgs, draw=0)
-            lmList, bbox = pd_squat.findPosition(imgs, draw=0, bboxWithHands=0)
+            lmList, _ = pd_squat.findPosition(imgs, draw=0, bboxWithHands=0)
 
-            angle1 = angleFinder(lmList, 24, 26, 28, 23, 25, 27, drawPoints=True)
+            angle1 = AngleFinder(lmList, 24, 26, 28, 23, 25, 27, drawPoints=True)
             left = angle1.angles()
 
-            # Counting number of shoulder ups
-            if left >= 90:
-                
-                if directions == 0:
-                    counters += 0.5
-                    directions = 1
-            if left <= 70:
-            
-                if directions == 1:
-                    counters += 0.5
-                    directions = 0
+            if left >= 90 and directions == 0:
+                counters += 0.5
+                directions = 1
+            if left <= 70 and directions == 1:
+                counters += 0.5
+                directions = 0
 
             cv2.rectangle(imgs, (0, 0), (120, 120), (255, 0, 0), -1)
             cv2.putText(imgs, str(int(counters)), (1, 70), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 1.6, (0, 0, 255), 6)
 
-            # Display the resulting frame
             _, jpegs = cv2.imencode('.jpg', imgs)
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + jpegs.tobytes() + b'\r\n\r\n')
 
     cap_squat.release()
     cv2.destroyAllWindows()
+
 
 NEWS_API_KEY = 'b8b52943d64b4eeca0afb40b47c23035'
 #-----------------------------------------------------------
