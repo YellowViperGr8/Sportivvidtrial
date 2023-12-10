@@ -25,9 +25,9 @@ counterp = 0
 directionp = 0
 pd_pushup = PoseDetector(trackCon=0.70, detectionCon=0.70)
 pd_squat = PoseDetector(trackCon=0.70, detectionCon=0.70)
-url = "http://192.168.1.2:8080/video"
-cap_pushup = cv2.VideoCapture("/dev/video0")
-cap_squat = cv2.VideoCapture("/dev/video0")
+
+cap_pushup = cv2.VideoCapture("/dev/v4l/by-id/usb-046d_08ce_5306FC91-video-index0")
+cap_squat = cv2.VideoCapture("/dev/v4l/by-id/usb-046d_08ce_5306FC91-video-index0")
 if cap_pushup.isOpened():
     pass
 
