@@ -11,7 +11,7 @@ import wikipediaapi
 
 
 
-app = Flask(__name__)
+main = Flask(__name__)
 
 video_access_event_pushup = threading.Event()
 video_access_event_pushup.set()
@@ -693,5 +693,3 @@ def video_feeds():
     return Response(stream_with_context(process_videos()),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
-if __name__ == '__main__':
-    app.run(debug=True)
