@@ -3,7 +3,7 @@ Gunicorn
 cvzone
 mediapipe
 requests
-time
+
 winsound
 threading
 pygame
