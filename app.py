@@ -7,6 +7,7 @@ import numpy as np
 import cvzone
 from cvzone.PoseModule import PoseDetector
 import threading
+import imutils
 
 
 
