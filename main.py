@@ -11,7 +11,7 @@ import wikipediaapi
 
 
 
-main = Flask(__name__)
+app = Flask(__name__)
 
 video_access_event_pushup = threading.Event()
 video_access_event_pushup.set()
