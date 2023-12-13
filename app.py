@@ -28,8 +28,7 @@ pd_squat = PoseDetector(trackCon=0.70, detectionCon=0.70)
 
 cap_pushup = cv2.VideoCapture(0)
 cap_squat = cv2.VideoCapture(0)
-if cap_pushup.isOpened():
-    pass
+
 
 import time
  # Import the pygame library
