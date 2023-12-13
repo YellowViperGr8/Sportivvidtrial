@@ -1,4 +1,3 @@
-wsgi
 Flask
 Gunicorn
 cvzone
