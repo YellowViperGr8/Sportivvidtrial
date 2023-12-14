@@ -108,25 +108,7 @@ def anglesp(lmlist, points, lines, drawpoints):
 
 
 
-@app.route('/upload', methods=['POST'])
-def upload():
-    if 'file' not in request.files:
-        return redirect(request.url)
 
-    file = request.files['file']
-
-    if file.filename == '':
-        return redirect(request.url)
-
-    if file:
-        # Save the uploaded file
-        video_path = os.path.join('uploads', file.filename)
-        file.save(video_path)
-
-        # Process the video using OpenCV
-        # Add your OpenCV processing code here
-
-        return render_template('pushup.html', video_path=video_path)
 
 
 def process_videop(video_path):
@@ -150,6 +132,26 @@ def process_videop(video_path):
 
     video.release()
     cv2.destroyAllWindows()
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    if 'file' not in request.files:
+        return redirect(request.url)
+
+    file = request.files['file']
+
+    if file.filename == '':
+        return redirect(request.url)
+
+    if file:
+        # Save the uploaded file
+        video_path = os.path.join('uploads', file.filename)
+        file.save(video_path)
+
+        # Process the video using OpenCV
+        # Add your OpenCV processing code here
+
+        return render_template('pushup.html', video_path=video_path)
 
 
 #------------------------------------------------
