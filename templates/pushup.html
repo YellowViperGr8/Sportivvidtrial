@@ -78,10 +78,18 @@
     </style>
 </head>
 <body>
-    <h1>AI Push-Up Counter</h1>
-    <img src="{{ url_for('video_feed') }}" width="1000" height="500" />
-    <form action="{{ url_for('stop_video') }}" method="post">
-        <input type="submit" value="Stop Video" />
+    <h1>Video Processing</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="video/*">
+        <input type="submit" value="Upload and Process">
     </form>
+
+    {% if video_path %}
+        <h2>Processed Video:</h2>
+        <video width="640" height="480" controls>
+            <source src="{{ video_path }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    {% endif %}
 </body>
 </html>
