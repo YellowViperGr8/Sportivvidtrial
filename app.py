@@ -119,7 +119,8 @@ def anglesp(lmlist, points, lines, drawpoints):
 
 
 def process_videop(file):
-    global video, pd_pushup, img, counterp, directionp, video_access_event_pushup, stop_video_flag
+
+            
     #video_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
     #file.save(video_path)
     #cap = cv2.VideoCapture(file.stream)
@@ -137,33 +138,35 @@ def process_videop(file):
     # OpenCV processing
     #cap = cv2.VideoCapture(video_stream)
 
-    nparr = np.frombuffer(file.read(), np.uint8)
-    cap = cv2.VideoCapture(nparr)
+    #nparr = np.frombuffer(file.read(), np.uint8)
+    #cap = cv2.VideoCapture(nparr)
 
 
-    while True:
-     ret, fframe = cap.read()
+    def generate_frames():
+        global video, pd_pushup, img, counterp, directionp, video_access_event_pushup, stop_video_flag
 
-     if not ret:
-      break
+        cap = cv2.VideoCapture(file.stream)
 
-    
+        while True:
+            ret, frame = cap.read()
 
-    if ret:
-        frame = cv2.flip(frame, 1)
-        img = cv2.resize(frame, (1000, 500))
-        cvzone.putTextRect(img, 'AI Push Up Counter', [345, 30], thickness=2, border=2, scale=2.5)
-        pd_pushup.findPose(img, draw=0)
-        lmlist, _ = pd_pushup.findPosition(img, draw=0, bboxWithHands=0)
+            if not ret:
+                break
+            frame = cv2.flip(frame, 1)
+            img = cv2.resize(frame, (1000, 500))
+            cvzone.putTextRect(img, 'AI Push Up Counter', [345, 30], thickness=2, border=2, scale=2.5)
+            pd_pushup.findPose(img, draw=0)
+            lmlist, _ = pd_pushup.findPosition(img, draw=0, bboxWithHands=0)
 
-        anglesp(lmlist, [lmlist[p] for p in (11, 13, 15, 12, 14, 16)], [(11, 13, 6), (13, 15, 6), (12, 14, 6),
+            anglesp(lmlist, [lmlist[p] for p in (11, 13, 15, 12, 14, 16)], [(11, 13, 6), (13, 15, 6), (12, 14, 6),
                                                                         (14, 16, 6), (11, 12, 6)], drawpoints=1)
 
-        _, jpeg = cv2.imencode('.jpg', frame)
-        yield (b'--frame\r\n'
-                b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
+            _, jpeg = cv2.imencode('.jpg', frame)
+            yield (b'--frame\r\n'
+                    b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
 
-    cap.release()
+        cap.release()
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
   
 
 
