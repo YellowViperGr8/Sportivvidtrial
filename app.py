@@ -28,6 +28,13 @@ import os
 app = Flask(__name__)
 
 
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'mp4', 'avi'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 #video_access_event_pushup = threading.Event()
 #video_access_event_pushup.set()
@@ -111,10 +118,17 @@ def anglesp(lmlist, points, lines, drawpoints):
 
 
 
-def process_videop(video_path):
+def process_videop(file):
     global video, pd_pushup, img, counterp, directionp, video_access_event_pushup, stop_video_flag
+    cap = cv2.VideoCapture(file.stream)
 
-    ret, frame = cv3.VideoCapture(video_path)
+    while True:
+     ret, frame = cv3.VideoCapture(video_path)
+
+     if not ret:
+      break
+
+    
 
     if ret:
         frame = cv2.flip(frame, 1)
@@ -153,6 +167,17 @@ def upload():
 
         return render_template('pushup.html', video_path=video_path)
 
+@app.route('/video_feed', methods=['POST'])
+def video_feed():
+    if 'file' not in request.files:
+        return render_template('index.html')
+
+    file = request.files['file']
+
+    if file.filename == '' or not allowed_file(file.filename):
+        return render_template('index.html')
+
+    return Response(process_video(file), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 #------------------------------------------------
 
@@ -608,9 +633,7 @@ def pushup():
 def squat():
  return render_template("squat.html")
 
-@app.route('/video_feed')
-def video_feed():
-    return Response(process_videop(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 @app.route('/stop_video', methods=['POST'])
 def stop_video():
