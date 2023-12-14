@@ -21,8 +21,13 @@ import os
 
 app = Flask(__name__)
 
-app.config['UPLOAD_FOLDER'] = '/path/to/your/uploads'
-app.config['ALLOWED_EXTENSIONS'] = {'mp4', 'avi'}
+app.config['SECRET_KEY'] = 'supersecretkey'
+app.config['UPLOAD_FOLDER'] = 'static/files'
+
+
+class UploadFileForm(FlaskForm):
+    file = FileField("File", validators=[InputRequired()])
+    submit = SubmitField("Upload File")
 
 #video_access_event_pushup = threading.Event()
 #video_access_event_pushup.set()
@@ -459,20 +464,15 @@ def get_cart_total():
 #-------------------------------------
 @app.route('/upload_video', methods=['POST'])
 def upload_video():
-    if 'video' not in request.files:
-        return redirect(request.url)
-    file = request.files['video']
-    if file.filename == '':
-        return redirect(request.url)
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        return redirect(url_for('video_feedp', video_filename=filename))
+form = UploadFileForm()
+    if form.validate_on_submit():
+        file = form.file.data # First grab the file
+        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename))) # Then save the file
+        return "File has been uploaded."
+    return render_template('index.html', form=form)
 
-@app.route('/video_feedp/<video_filename>')
-def video_feedp(video_filename):
-    global video_file_path
-    video_file_path = os.path.join(app.config['UPLOAD_FOLDER'], video_filename)
+
+
 
     
 
