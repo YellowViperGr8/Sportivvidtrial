@@ -131,7 +131,7 @@ def process_videop(file):
 
 
     while True:
-     ret, frame = cv3.VideoCapture(video_path)
+     ret, frame = cv2.VideoCapture(file.stream)
 
      if not ret:
       break
