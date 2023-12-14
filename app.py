@@ -129,13 +129,16 @@ def process_videop(file):
     # OpenCV processing
     #cap = cv2.VideoCapture(file.stream)
 
-    video_data = file.read()
+    #video_data = file.read()
 
     # Create a stream from the in-memory bytes
-    video_stream = io.BytesIO(video_data)
+    #video_stream = io.BytesIO(video_data)
 
     # OpenCV processing
-    cap = cv2.VideoCapture(video_stream)
+    #cap = cv2.VideoCapture(video_stream)
+
+    nparr = np.frombuffer(file.read(), np.uint8)
+    cap = cv2.VideoCapture(nparr)
 
 
     while True:
@@ -161,7 +164,7 @@ def process_videop(file):
                 b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
 
     cap.release()
-    os.remove(video_path)
+  
 
 
 
