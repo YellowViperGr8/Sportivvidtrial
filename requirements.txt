@@ -1,6 +1,7 @@
 Flask
 Gunicorn
 cvzone
+v4l-utils
 mediapipe
 requests
 imutils
