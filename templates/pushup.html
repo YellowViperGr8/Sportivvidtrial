@@ -79,7 +79,7 @@
 </head>
 <body>
     <h1>AI Push-Up Counter</h1>
-    <img src="{{ url_for('video_feed_pushup') }}" width="1000" height="500" />
+    <img src="{{ url_for('video_feed') }}" width="1000" height="500" />
     <form action="{{ url_for('stop_video') }}" method="post">
         <input type="submit" value="Stop Video" />
     </form>
