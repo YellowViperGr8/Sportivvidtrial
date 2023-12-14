@@ -14,7 +14,7 @@ from wtforms import FileField, SubmitField
 
 import os
 from wtforms.validators import InputRequired
-import v4l2capture
+
 import select
 from werkzeug.utils import secure_filename
 import os
