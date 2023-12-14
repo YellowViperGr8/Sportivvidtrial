@@ -78,30 +78,10 @@
     </style>
 </head>
 <body>
-    <h1>AI Push Up Counter</h1>
-    
-        <form method='POST' enctype='multipart/form-data'>
-        {{form.hidden_tag()}}
-        {{form.file()}}
-        {{form.submit()}}
-        </form>
-
-    
-    <img id="video_feed" src="{{ url_for('video_feedp') }}" alt="Video Feed">
-
-    <button id="stop_button" onclick="stopVideo()">Stop Video</button>
-
-    <a href="{{ url_for('fit') }}">Go Back</a>
-
-    <script>
-        function stopVideo() {
-            fetch("/stop_video_pushup")
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    document.getElementById("stop_button").style.display = "none";
-                });
-        }   
-    </script>
+    <h1>AI Push-Up Counter</h1>
+    <img src="{{ url_for('video_feed_pushup') }}" width="1000" height="500" />
+    <form action="{{ url_for('stop_video') }}" method="post">
+        <input type="submit" value="Stop Video" />
+    </form>
 </body>
 </html>
