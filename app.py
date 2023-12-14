@@ -8,7 +8,7 @@ import cvzone
 from cvzone.PoseModule import PoseDetector
 import threading
 import imutils
-
+from urllib.parse import unquote
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField
 
@@ -147,25 +147,7 @@ def process_videop(file):
     video.release()
     cv2.destroyAllWindows()
 
-@app.route('/upload', methods=['POST'])
-def upload():
-    if 'file' not in request.files:
-        return redirect(request.url)
 
-    file = request.files['file']
-
-    if file.filename == '':
-        return redirect(request.url)
-
-    if file:
-        # Save the uploaded file
-        video_path = os.path.join('uploads', file.filename)
-        file.save(video_path)
-
-        # Process the video using OpenCV
-        # Add your OpenCV processing code here
-
-        return render_template('pushup.html', video_path=video_path)
 
 @app.route('/video_feed', methods=['POST'])
 def video_feed():
