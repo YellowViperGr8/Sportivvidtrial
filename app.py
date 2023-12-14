@@ -36,7 +36,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
 #video_access_event_pushup = threading.Event()
 #video_access_event_pushup.set()
 
@@ -121,8 +120,8 @@ def anglesp(lmlist, points, lines, drawpoints):
 
 def process_videop(file):
     global video, pd_pushup, img, counterp, directionp, video_access_event_pushup, stop_video_flag
-    video_bytes = file.read()
-    video_np = np.frombuffer(video_bytes, np.uint8)
+    video_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
+    file.save(video_path)
     cap = cv2.VideoCapture(video_np.tobytes())
 
 
@@ -144,12 +143,12 @@ def process_videop(file):
         anglesp(lmlist, [lmlist[p] for p in (11, 13, 15, 12, 14, 16)], [(11, 13, 6), (13, 15, 6), (12, 14, 6),
                                                                         (14, 16, 6), (11, 12, 6)], drawpoints=1)
 
-        _, jpeg = cv2.imencode('.jpg', img)
+       _, jpeg = cv2.imencode('.jpg', frame)
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
 
-    video.release()
-    cv2.destroyAllWindows()
+    cap.release()
+    os.remove(video_path)
 
 
 
