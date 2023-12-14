@@ -593,6 +593,10 @@ def hi():
 @app.route("/pc")
 def pushup():
  return render_template("pushup.html")
+
+@app.route("/sc")
+def squat():
+ return render_template("squat.html")
     
 
 
