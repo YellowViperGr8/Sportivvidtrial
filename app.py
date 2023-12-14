@@ -14,13 +14,15 @@ from werkzeug.utils import secure_filename
 import os
 #libv4l-dev
 
-app.config['UPLOAD_FOLDER'] = '/path/to/your/uploads'
-app.config['ALLOWED_EXTENSIONS'] = {'mp4', 'avi'}
+
 
 
 
 
 app = Flask(__name__)
+
+app.config['UPLOAD_FOLDER'] = '/path/to/your/uploads'
+app.config['ALLOWED_EXTENSIONS'] = {'mp4', 'avi'}
 
 #video_access_event_pushup = threading.Event()
 #video_access_event_pushup.set()
