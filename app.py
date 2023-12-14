@@ -143,9 +143,9 @@ def process_videop(file):
         anglesp(lmlist, [lmlist[p] for p in (11, 13, 15, 12, 14, 16)], [(11, 13, 6), (13, 15, 6), (12, 14, 6),
                                                                         (14, 16, 6), (11, 12, 6)], drawpoints=1)
 
-       _, jpeg = cv2.imencode('.jpg', frame)
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
+        _, jpeg = cv2.imencode('.jpg', frame)
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
 
     cap.release()
     os.remove(video_path)
