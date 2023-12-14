@@ -12,6 +12,7 @@ from urllib.parse import unquote
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField
 
+from io import BytesIO
 import os
 from wtforms.validators import InputRequired
 
@@ -120,7 +121,10 @@ def anglesp(lmlist, points, lines, drawpoints):
 
 def process_videop(file):
     global video, pd_pushup, img, counterp, directionp, video_access_event_pushup, stop_video_flag
-    cap = cv2.VideoCapture(file.stream)
+    video_bytes = file.read()
+    video_np = np.frombuffer(video_bytes, np.uint8)
+    cap = cv2.VideoCapture(video_np.tobytes())
+
 
     while True:
      ret, frame = cv3.VideoCapture(video_path)
