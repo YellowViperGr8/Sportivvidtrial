@@ -124,14 +124,22 @@ def process_videop(file):
     #file.save(video_path)
     #cap = cv2.VideoCapture(file.stream)
 
-    file.stream.seek(0)
+    #file.stream.seek(0)
 
     # OpenCV processing
-    cap = cv2.VideoCapture(file.stream)
+    #cap = cv2.VideoCapture(file.stream)
+
+    video_data = file.read()
+
+    # Create a stream from the in-memory bytes
+    video_stream = io.BytesIO(video_data)
+
+    # OpenCV processing
+    cap = cv2.VideoCapture(video_stream)
 
 
     while True:
-     ret, frame = cv2.VideoCapture(file.stream)
+     ret, fframe = cap.read()
 
      if not ret:
       break
