@@ -27,13 +27,7 @@ import os
 
 app = Flask(__name__)
 
-stop_video_flag = False
 
-video = v4l2capture.Video_device("/dev/video0")
-size_x, size_y = video.set_format(640, 480)
-video.create_buffers(30)
-video.queue_all_buffers()
-video.start()
 
 #video_access_event_pushup = threading.Event()
 #video_access_event_pushup.set()
@@ -108,29 +102,51 @@ def anglesp(lmlist, points, lines, drawpoints):
     if right > 70:
         cv2.rectangle(img, (8, int(leftval)), (50, 400), (0, 0, 255), -1)
 
-def process_videop():
+
+# app.py
+
+
+
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    if 'file' not in request.files:
+        return redirect(request.url)
+
+    file = request.files['file']
+
+    if file.filename == '':
+        return redirect(request.url)
+
+    if file:
+        # Save the uploaded file
+        video_path = os.path.join('uploads', file.filename)
+        file.save(video_path)
+
+        # Process the video using OpenCV
+        # Add your OpenCV processing code here
+
+        return render_template('pushup.html', video_path=video_path)
+
+
+def process_videop(video_path):
     global video, pd_pushup, img, counterp, directionp, video_access_event_pushup, stop_video_flag
 
-    while not stop_video_flag:
-        # Capture frame from webcam using v4l2
-        video.queue_all_buffers()
-        select.select((video,), (), ())
-        image_data = video.read_and_queue()
-        frame = cv2.imdecode(image_data, 1)
+    ret, frame = cv3.VideoCapture(video_path)
 
-        if frame is not None:
-            frame = cv2.flip(frame, 1)
-            img = cv2.resize(frame, (1000, 500))
-            cvzone.putTextRect(img, 'AI Push Up Counter', [345, 30], thickness=2, border=2, scale=2.5)
-            pd_pushup.findPose(img, draw=0)
-            lmlist, _ = pd_pushup.findPosition(img, draw=0, bboxWithHands=0)
+    if ret:
+        frame = cv2.flip(frame, 1)
+        img = cv2.resize(frame, (1000, 500))
+        cvzone.putTextRect(img, 'AI Push Up Counter', [345, 30], thickness=2, border=2, scale=2.5)
+        pd_pushup.findPose(img, draw=0)
+        lmlist, _ = pd_pushup.findPosition(img, draw=0, bboxWithHands=0)
 
-            anglesp(lmlist, [lmlist[p] for p in (11, 13, 15, 12, 14, 16)], [(11, 13, 6), (13, 15, 6), (12, 14, 6),
-                                                                            (14, 16, 6), (11, 12, 6)], drawpoints=1)
+        anglesp(lmlist, [lmlist[p] for p in (11, 13, 15, 12, 14, 16)], [(11, 13, 6), (13, 15, 6), (12, 14, 6),
+                                                                        (14, 16, 6), (11, 12, 6)], drawpoints=1)
 
-            _, jpeg = cv2.imencode('.jpg', img)
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
+        _, jpeg = cv2.imencode('.jpg', img)
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
 
     video.release()
     cv2.destroyAllWindows()
