@@ -120,9 +120,9 @@ def anglesp(lmlist, points, lines, drawpoints):
 
 def process_videop(file):
     global video, pd_pushup, img, counterp, directionp, video_access_event_pushup, stop_video_flag
-    video_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
-    file.save(video_path)
-    cap = cv2.VideoCapture(video_path)
+    #video_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
+    #file.save(video_path)
+    cap = cv2.VideoCapture(file.stream)
 
 
     while True:
