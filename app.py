@@ -8,7 +8,7 @@ import cvzone
 from cvzone.PoseModule import PoseDetector
 import threading
 import imutils
-from v4l2 import v4l2capture
+
 import select
 from werkzeug.utils import secure_filename
 import os
