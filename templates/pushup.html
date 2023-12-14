@@ -79,7 +79,13 @@
 </head>
 <body>
     <h1>AI Push Up Counter</h1>
+    
+    <form method="POST" action="/upload_video" enctype="multipart/form-data">
+    <input type="file" name="video" required>
+    <button type="submit">Upload</button>
+    </form>
 
+    
     <img id="video_feed" src="{{ url_for('video_feedp') }}" alt="Video Feed">
 
     <button id="stop_button" onclick="stopVideo()">Stop Video</button>
