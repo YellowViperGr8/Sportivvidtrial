@@ -591,7 +591,7 @@ def hi():
 
 
 @app.route("/pc")
-def pushup:
+def pushup():
  return render_template("pushup.html")
     
 
