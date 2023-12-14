@@ -1,4 +1,6 @@
 Flask
+flask_wtf
+wtforms
 Gunicorn
 cvzone
 v4l2
