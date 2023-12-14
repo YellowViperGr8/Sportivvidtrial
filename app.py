@@ -606,11 +606,7 @@ def squat():
     return render_template('squat.html')
     
 
-# Route for the video feed
-@app.route('/video_feedp')
-def video_feedp():
-    return Response(stream_with_context(process_videop()),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 # Route for the video feed
 @app.route('/video_feeds')
