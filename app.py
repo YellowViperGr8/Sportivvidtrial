@@ -91,7 +91,12 @@ def process_videop():
     global cap_pushup, pd_pushup, img, counterp, directionp, video_access_event_pushup
 
     while video_access_event_pushup.is_set():
-        ret, frame = cap_pushup.read()
+     #while(True):
+      	 select.select((cap_pushup,), (), ())
+      	 image_data = cap_pushup.read_and_queue()
+      	 image = np.frombuffer(image_data, dtype=np.uint8)
+       	ret, frame = cv2.imdecode(image, cv2.IMREAD_COLOR)
+        # ret, frame = cap_pushup.read()
 
         if ret:
             frame = cv2.flip(frame, 1)
