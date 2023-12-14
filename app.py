@@ -9,6 +9,12 @@ from cvzone.PoseModule import PoseDetector
 import threading
 import imutils
 
+from flask_wtf import FlaskForm
+from wtforms import FileField, SubmitField
+
+import os
+from wtforms.validators import InputRequired
+
 import select
 from werkzeug.utils import secure_filename
 import os
