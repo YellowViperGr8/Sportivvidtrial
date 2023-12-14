@@ -8,7 +8,7 @@ import cvzone
 from cvzone.PoseModule import PoseDetector
 import threading
 import imutils
-import v4l2capture
+from v4l2 import v4l2capture
 import select
 #libv4l-dev
 
