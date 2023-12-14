@@ -159,7 +159,10 @@ def video_feed():
     if file.filename == '' or not allowed_file(file.filename):
         return render_template('index.html')
 
-    return Response(process_video(file), mimetype='multipart/x-mixed-replace; boundary=frame')
+    file_name = secure_filename(file.filename)
+    return Response(process_video(file), mimetype='multipart/x-mixed-replace; boundary=frame',
+                    content_type='multipart/x-mixed-replace; boundary=frame',
+                    headers={'Content-Disposition': f'inline; filename={unquote(file_name)}'})
 
 #------------------------------------------------
 
