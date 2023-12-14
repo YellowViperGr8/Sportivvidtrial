@@ -5,4 +5,4 @@ v4l2capture
 mediapipe
 requests
 imutils
-libv4l-dev
+
