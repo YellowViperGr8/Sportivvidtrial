@@ -100,8 +100,8 @@ def anglesp(lmlist, points, lines, drawpoints):
 def process_videop():
     global cap_pushup, pd_pushup, img, counterp, directionp, video_access_event_pushup
 
-     while(True):
-        ret, frame = cap_pushup.read()
+    while(True):
+       ret, frame = cap_pushup.read()
 
      if ret:
          frame = cv2.flip(frame, 1)
