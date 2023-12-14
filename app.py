@@ -475,7 +475,7 @@ def upload_video():
         file = form.file.data # First grab the file
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename))) # Then save the file
         return "File has been uploaded."
-    return render_template('index.html', form=form)
+    return render_template('pushup.html', form=form)
 
 
 
