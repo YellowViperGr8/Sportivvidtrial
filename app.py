@@ -588,22 +588,11 @@ def hi():
       
    
 
-@app.route('/puc')
-def push():
-    global video_access_event_pushup
-    video_access_event_pushup.set()
-    global y
-    y = 1
-    return render_template('pushup.html')
-    
 
-@app.route('/sqc')
-def squat():
-    global video_access_event_squat
-    video_access_event_squat.set()
-    global y
-    y = 2
-    return render_template('squat.html')
+
+@app.route("/pc")
+def pushup:
+ return render_template("pushup.html")
     
 
 
