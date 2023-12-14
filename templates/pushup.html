@@ -80,10 +80,11 @@
 <body>
     <h1>AI Push Up Counter</h1>
     
-    <form method="POST" action="/upload_video" enctype="multipart/form-data">
-    <input type="file" name="video" required>
-    <button type="submit">Upload</button>
-    </form>
+        <form method='POST' enctype='multipart/form-data'>
+        {{form.hidden_tag()}}
+        {{form.file()}}
+        {{form.submit()}}
+        </form>
 
     
     <img id="video_feed" src="{{ url_for('video_feedp') }}" alt="Video Feed">
