@@ -457,7 +457,6 @@ def get_cart_total():
 
 
 #-------------------------------------
-# Route for the home page
 @app.route('/upload_video', methods=['POST'])
 def upload_video():
     if 'video' not in request.files:
