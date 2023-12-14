@@ -144,8 +144,8 @@ def process_videop(file):
                                                                         (14, 16, 6), (11, 12, 6)], drawpoints=1)
 
         _, jpeg = cv2.imencode('.jpg', frame)
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
+        yield (b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
 
     cap.release()
     os.remove(video_path)
