@@ -166,7 +166,7 @@ def process_videop(file):
                     b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
 
         cap.release()
-    return Response(iter(generate_frames()), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
   
 
 
