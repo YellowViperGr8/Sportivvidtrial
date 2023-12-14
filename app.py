@@ -10,19 +10,23 @@ import threading
 import imutils
 from v4l2 import v4l2capture
 import select
+from werkzeug.utils import secure_filename
+import os
 #libv4l-dev
 
+app.config['UPLOAD_FOLDER'] = '/path/to/your/uploads'
+app.config['ALLOWED_EXTENSIONS'] = {'mp4', 'avi'}
 
 
 
 
 app = Flask(__name__)
 
-video_access_event_pushup = threading.Event()
-video_access_event_pushup.set()
+#video_access_event_pushup = threading.Event()
+#video_access_event_pushup.set()
 
-video_access_event_squat = threading.Event()
-video_access_event_squat.set()
+#video_access_event_squat = threading.Event()
+#video_access_event_squat.set()
 
 #variables-------
 counterp = 0
@@ -30,16 +34,20 @@ directionp = 0
 pd_pushup = PoseDetector(trackCon=0.70, detectionCon=0.70)
 pd_squat = PoseDetector(trackCon=0.70, detectionCon=0.70)
 
-cap_pushup = v4l2capture.Video_device("/dev/video0")
+#cap_pushup = v4l2capture.Video_device("/dev/video0")
 #cap_pushup = v4l2capture.Video_device("/dev/video0")
 #cap_pushup = cv2.VideoCapture('/dev/video0')
-cap_squat = cv2.VideoCapture('/dev/video0')
+#cap_squat = cv2.VideoCapture('/dev/video0')
 
 
 import time
  # Import the pygame library
 import os
 
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 #----------------------------------------------
 #Push Up counter
@@ -448,22 +456,30 @@ def get_cart_total():
 
 #-------------------------------------
 # Route for the home page
+@app.route('/upload_video', methods=['POST'])
+def upload_video():
+    if 'video' not in request.files:
+        return redirect(request.url)
+    file = request.files['video']
+    if file.filename == '':
+        return redirect(request.url)
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        return redirect(url_for('video_feedp', video_filename=filename))
 
-@app.route('/stop_video_pushup', methods=['GET'])
-def stop_video_pushup():
-    global video_access_event_pushup
-    global counterp
-    counterp =0
-    video_access_event_pushup.clear()
-    return jsonify({"message": "Video access stopped."})
+@app.route('/video_feedp/<video_filename>')
+def video_feedp(video_filename):
+    global video_file_path
+    video_file_path = os.path.join(app.config['UPLOAD_FOLDER'], video_filename)
 
-@app.route('/stop_video_squat', methods=['GET'])
-def stop_video_squat():
-    global video_access_event_squat
-    global counters
-    counters =0
-    video_access_event_squat.clear()
-    return jsonify({"message": "Video access stopped."})
+    
+
+    return Response(stream_with_context(process_videop()),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
+
 
 
 # @app.route('/start_video_pushup', methods=['GET'])
