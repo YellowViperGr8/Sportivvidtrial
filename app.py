@@ -20,6 +20,10 @@ import select
 from werkzeug.utils import secure_filename
 import os
 #libv4l-dev
+import sys
+from pyzbar.pyzbar import decode
+from transform import anglesp
+from collections import defaultdict
 
 
 
@@ -118,7 +122,7 @@ def anglesp(lmlist, points, lines, drawpoints):
 
 
 
-def generate_frames(file):
+def generate_frames(stream):
 
             
     #video_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
@@ -177,7 +181,9 @@ def process_video():
     if file and allowed_file(file.filename):
         file.save('/tmp/input_video.mp4') # save the file to a temporary location
         cap = cv2.VideoCapture('/tmp/input_video.mp4') # open the file using the temporary path
-        return Response(generate_frames(cap), mimetype='multipart/x-mixed-replace; boundary=frame')
+        stream = cv2.VideoCaptureStream(cap) # get the file stream
+        return Response(generate_frames(stream), mimetype='multipart/x-mixed-replace; boundary=frame')
+
         
 
 
