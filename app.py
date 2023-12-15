@@ -122,7 +122,7 @@ def anglesp(lmlist, points, lines, drawpoints):
 
 
 
-def generate_frames(stream):
+def generate_frames(cap):
 
             
     #video_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
@@ -149,7 +149,7 @@ def generate_frames(stream):
 
     global video, pd_pushup, img, counterp, directionp, video_access_event_pushup, stop_video_flag
 
-    cap = cv2.VideoCapture(file.stream)
+    cap = cv2.VideoCapture(cap)
 
     while True:
         ret, frame = cap.read()
@@ -181,8 +181,8 @@ def process_video():
     if file and allowed_file(file.filename):
         file.save('/tmp/input_video.mp4') # save the file to a temporary location
         cap = cv2.VideoCapture('/tmp/input_video.mp4') # open the file using the temporary path
-        stream = cv2.VideoCapture(cap) # get the file stream
-        return Response(generate_frames(stream), mimetype='multipart/x-mixed-replace; boundary=frame')
+        #stream = cv2.VideoCapture(cap) # get the file stream
+        return Response(generate_frames(cap), mimetype='multipart/x-mixed-replace; boundary=frame')
 
         
 
