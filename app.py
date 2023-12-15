@@ -166,6 +166,8 @@ def upload():
 
         # Process the video using OpenCV and continuously yield frames
         return Response(generate_frames(temp_filename), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
 #------------------------------------------------
 
 #Squat counter
