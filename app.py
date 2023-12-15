@@ -148,24 +148,27 @@ def generate_frames(stream):
 
     global video, pd_pushup, img, counterp, directionp, video_access_event_pushup, stop_video_flag
 
+
+    global pd_pushup, img
+
     while True:
-            frame = stream.read()
-    
-            if frame is None:
-                break
-    
-            frame = cv2.flip(frame, 1)
-            img = cv2.resize(frame, (1000, 500))
-            cvzone.putTextRect(img, 'AI Push Up Counter', [345, 30], thickness=2, border=2, scale=2.5)
-            pd_pushup.findPose(img, draw=0)
-            lmlist, _ = pd_pushup.findPosition(img, draw=0, bboxWithHands=0)
-    
-            anglesp(lmlist, [lmlist[p] for p in (11, 13, 15, 12, 14, 16)], [(11, 13, 6), (13, 15, 6), (12, 14, 6),
-                                                                            (14, 16, 6), (11, 12, 6)], drawpoints=1)
-    
-            _, jpeg = cv2.imencode('.jpg', frame)
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
+        frame = stream.read()
+
+        if frame is None:
+            break
+
+        frame = cv2.flip(frame, 1)
+        img = cv2.resize(frame, (1000, 500))
+        cvzone.putTextRect(img, 'AI Push Up Counter', [345, 30], thickness=2, border=2, scale=2.5)
+        pd_pushup.findPose(img, draw=0)
+        lmlist, _ = pd_pushup.findPosition(img, draw=0, bboxWithHands=0)
+
+        anglesp(lmlist, [lmlist[p] for p in (11, 13, 15, 12, 14, 16)], [(11, 13, 6), (13, 15, 6), (12, 14, 6),
+                                                                        (14, 16, 6), (11, 12, 6)], drawpoints=1)
+
+        _, jpeg = cv2.imencode('.jpg', frame)
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
 
 
 
@@ -176,8 +179,8 @@ def process_video():
     file = request.files['file']
 
     if file and allowed_file(file.filename):
-        stream = cv2.VideoCapture(file.stream)
-        return Response(generate_frames(stream), mimetype='multipart/x-mixed-replace; boundary=frame')
+        cap = cv2.VideoCapture(file.stream)
+        return Response(generate_frames(cap), mimetype='multipart/x-mixed-replace; boundary=frame')
 
         
 
