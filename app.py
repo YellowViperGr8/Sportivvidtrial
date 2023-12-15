@@ -161,10 +161,10 @@ def generate_frames():
                                                                             (14, 16, 6), (11, 12, 6)], drawpoints=1)
     
             _, jpeg = cv2.imencode('.jpg', frame)
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
+            x = yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
             
-            return Response(yield, mimetype='multipart/x-mixed-replace; boundary=frame')
+            return Response(x, mimetype='multipart/x-mixed-replace; boundary=frame')
     
             # Process the video or do whatever you need with it
 
