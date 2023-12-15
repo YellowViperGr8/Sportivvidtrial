@@ -22,7 +22,7 @@ import os
 #libv4l-dev
 import sys
 
-from transform import anglesp
+
 from collections import defaultdict
 
 
