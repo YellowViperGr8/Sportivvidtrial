@@ -547,6 +547,8 @@ def cht():
     return render_template('chtbot.html')
 
 
+openai.api_key = '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'
+
 @app.route('/get_response', methods=['POST'])
 def get_response():
     try:
@@ -554,21 +556,22 @@ def get_response():
         bot_response = generate_response(user_message)
         return jsonify({'bot_response': bot_response})
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error in get_response: {e}")
         return jsonify({'bot_response': 'An error occurred. Please try again.'}), 500
-        
-openai.api_key = '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'
 
 def generate_response(user_message):
-    # You can customize the model and other parameters as needed
-    response = openai.Completion.create(
-        engine="text-davinci-002",
-        prompt=f"User: {user_message}\nChatGPT:",
-        max_tokens=150,
-        n=1,
-        stop=None
-    )
-    return response.choices[0].text.strip()
+    try:
+        response = openai.Completion.create(
+            engine="text-davinci-002",
+            prompt=f"User: {user_message}\nChatGPT:",
+            max_tokens=150,
+            n=1,
+            stop=None
+        )
+        return response.choices[0].text.strip()
+    except Exception as e:
+        print(f"Error in generate_response: {e}")
+        return 'An error occurred during response generation.'
 
 @app.route('/sportstraining')
 def st():  
