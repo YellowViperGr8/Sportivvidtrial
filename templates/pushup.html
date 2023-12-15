@@ -75,11 +75,58 @@
         a:hover {
             background-color: #0056b3;
         }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin: 20px auto;
+            max-width: 400px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 20px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
 
-    <h1>Video Upload</h1>
+    <h1>Push Up Counter</h1>
     <form action="/upload" method="post" enctype="multipart/form-data">
         <input type="file" name="file">
         <input type="submit" value="Upload">
