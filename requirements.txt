@@ -8,4 +8,4 @@ requests
 imutils
 pyzbar
 transform
-collections
+
