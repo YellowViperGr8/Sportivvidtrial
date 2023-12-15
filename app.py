@@ -128,8 +128,7 @@ def generate_frames():
     global pd_pushup, img
 
 
-    if 'file' not in request.files:
-        return 'No file part'
+    
 
     file = request.files['file']
 
