@@ -6,3 +6,6 @@ cvzone
 mediapipe
 requests
 imutils
+pyzbar
+transform
+collections
