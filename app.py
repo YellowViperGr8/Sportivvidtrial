@@ -122,13 +122,37 @@ def anglesp(lmlist, points, lines, drawpoints):
 UPLOAD_FOLDER = 'temp'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-@app.route('/upload', methods=['POST'])
-def generate_frames():
+def generate_frames(temp_filename):
     global video, pd_pushup, img, counterp, directionp, video_access_event_pushup, stop_video_flag
     global pd_pushup, img
+    cap = cv2.VideoCapture(temp_filename)
 
+    while True:
+        ret, frame = cap.read()
 
+        if not ret:
+            break
+
+        frame = cv2.flip(frame, 1)
+        img = cv2.resize(frame, (1000, 500))
+        cvzone.putTextRect(img, 'AI Push Up Counter', [345, 30], thickness=2, border=2, scale=2.5)
+        pd_pushup.findPose(img, draw=0)
+        lmlist, _ = pd_pushup.findPosition(img, draw=0, bboxWithHands=0)
     
+        anglesp(lmlist, [lmlist[p] for p in (11, 13, 15, 12, 14, 16)], [(11, 13, 6), (13, 15, 6), (12, 14, 6),
+                                                                            (14, 16, 6), (11, 12, 6)], drawpoints=1)
+        # Additional processing steps...
+
+        _, jpeg = cv2.imencode('.jpg', img)
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
+
+    cap.release()
+
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    global pd_pushup, img  # Add other global variables as needed
 
     file = request.files['file']
 
@@ -136,41 +160,12 @@ def generate_frames():
         return 'No selected file'
 
     if file:
-
-       
         # Save the file to a temporary folder
         temp_filename = os.path.join(app.config['UPLOAD_FOLDER'], tempfile.NamedTemporaryFile().name)
         file.save(temp_filename)
 
-        cap = cv2.VideoCapture(temp_filename)
-
-        while True:
-            frame = cap.read()
-    
-            if frame is None:
-                break
-    
-            frame = cv2.flip(frame, 1)
-            img = cv2.resize(frame, (1000, 500))
-            cvzone.putTextRect(img, 'AI Push Up Counter', [345, 30], thickness=2, border=2, scale=2.5)
-            pd_pushup.findPose(img, draw=0)
-            lmlist, _ = pd_pushup.findPosition(img, draw=0, bboxWithHands=0)
-    
-            anglesp(lmlist, [lmlist[p] for p in (11, 13, 15, 12, 14, 16)], [(11, 13, 6), (13, 15, 6), (12, 14, 6),
-                                                                            (14, 16, 6), (11, 12, 6)], drawpoints=1)
-    
-            _, jpeg = cv2.imencode('.jpg', frame)
-            x = yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
-            
-            return Response(x, mimetype='multipart/x-mixed-replace; boundary=frame')
-    
-            # Process the video or do whatever you need with it
-
-        # Delete the temporary file after usage
-    os.remove(temp_filename)       
-
-
+        # Process the video using OpenCV and continuously yield frames
+        return Response(generate_frames(temp_filename), mimetype='multipart/x-mixed-replace; boundary=frame')
 #------------------------------------------------
 
 #Squat counter
