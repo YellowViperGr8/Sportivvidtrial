@@ -118,7 +118,7 @@ def anglesp(lmlist, points, lines, drawpoints):
 
 
 
-def generate_frmaes(file):
+def generate_frames(file):
 
             
     #video_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
