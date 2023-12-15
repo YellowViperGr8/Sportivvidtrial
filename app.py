@@ -21,7 +21,7 @@ from werkzeug.utils import secure_filename
 import os
 #libv4l-dev
 import sys
-from pyzbar.pyzbar import decode
+
 from transform import anglesp
 from collections import defaultdict
 
