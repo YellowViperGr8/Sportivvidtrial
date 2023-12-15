@@ -11,7 +11,7 @@ import imutils
 from urllib.parse import unquote
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField
-
+import openai
 from io import BytesIO
 import os
 from wtforms.validators import InputRequired
@@ -556,7 +556,8 @@ def get_response():
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({'bot_response': 'An error occurred. Please try again.'}), 500
-    
+        
+openai.api_key = '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'
 
 def generate_response(user_message):
     # You can customize the model and other parameters as needed
