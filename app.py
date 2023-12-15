@@ -559,41 +559,15 @@ def get_response():
     
 
 def generate_response(user_message):
-    # Simple rule-based responses for fitness chatbot
-    if 'exercise' in user_message.lower():
-        return "Exercise is crucial for maintaining a healthy lifestyle. What type of exercise are you interested in?"
-    elif 'diet' in user_message.lower():
-        return "A balanced diet is essential.Make sure to eat more protein and less fat intake whilst working out regularly"
-    elif 'motivation' in user_message.lower():
-        return "Staying motivated is key! What are your fitness goals?"
-    elif 'cardio' in user_message.lower():
-        return "Jogging, Skipping ,Running, Rowing,  Jumping, Mountain climbers are good examples of cardio workouts"    
-    elif 'biceps' in user_message.lower() or "bicep" in user_message.lower():
-        return "Barbell or Dumbbell Curls, Hammer curls, Pull ups, Chin-Ups are some good exercises for growing biceps"   
-    elif 'calves' in user_message.lower():
-        return "Standing Calf Raises, Seated Calf Raises ,Calf Press on the Leg Press Machine are good examples of cardio workouts" 
-    elif 'core' in user_message.lower():
-        return "Planks, Russian Twists ,Hanging Leg Raises, Bicycle Crunches are good examples of cardio workouts" 
-    elif 'legs' in user_message.lower():
-        return "Squats, Deadlifts, Lunges, Leg Press are good examples of cardio workouts" 
-    elif 'cardio' in user_message.lower():
-        return "Jogging, Skipping ,Running, Rowing,  Jumping, Mountain climbers are good examples of cardio workouts" 
-    elif 'glutes' in user_message.lower():
-        return "Glute Bridges, Deadlifts ,Lunges, Squats (especially deep squats) are good examples of cardio workouts" 
-    elif 'workout' and "age" in user_message.lower() or "working out" and "age" in user_message.lower():
-        return "There is no strict age to start working out. But if you are below 14 it is advised that you do not start going to the gym yet"   
-    elif 'triceps' in user_message.lower() or "tricep" in user_message.lower():
-        return "Tricep Dips, Close-Grip Bench Press , Tricep Kickbacks are good examples of cardio workouts" 
-    elif 'shoulders' in user_message.lower():
-        return "Overhead Press (Barbell or Dumbbell), Lateral Raises ,Face Pulls are good examples of cardio workouts" 
-    elif 'chest' in user_message.lower():
-        return "Barbell Bench Press, Dumbbell Bench Press ,Push-Ups are good examples of cardio workouts" 
-    elif 'back' in user_message.lower():
-        return "Deadlifts, Bent-over Barbell Rows, Lat Pulldowns, Pull-Ups are good examples of cardio workouts" 
-    elif 'okay' in user_message.lower() or "ok" in user_message.lower():
-        return "Do you have any other queries?" 
-    else:
-        return "I'm sorry, I didn't understand that. Can you please provide more details?"
+    # You can customize the model and other parameters as needed
+    response = openai.Completion.create(
+        engine="text-davinci-002",
+        prompt=f"User: {user_message}\nChatGPT:",
+        max_tokens=150,
+        n=1,
+        stop=None
+    )
+    return response.choices[0].text.strip()
 
 @app.route('/sportstraining')
 def st():  
