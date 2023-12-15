@@ -86,7 +86,7 @@
 
     {% if video_path %}
         <h2>Processed Video:</h2>
-        <img src="{{ url_for('video_feed', file_name=video_path|urlencode) }}" alt="Processed Video">
+        <img src="{{ url_for('process_video', file_name=video_path|urlencode) }}" alt="Processed Video">
     {% endif %}
 </body>
 </html>
