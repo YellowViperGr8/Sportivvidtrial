@@ -571,7 +571,7 @@ def generate_response(user_message):
         return response.choices[0].text.strip()
     except Exception as e:
         print(f"Error in generate_response: {e}")
-        return 'An error occurred during response generation.'
+        return f'An error occurred during response generation: {str(e)}'
 
 @app.route('/sportstraining')
 def st():  
