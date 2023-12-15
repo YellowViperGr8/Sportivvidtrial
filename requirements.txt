@@ -8,4 +8,5 @@ requests
 imutils
 pyzbar
 transform
+openai
 
