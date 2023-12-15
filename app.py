@@ -146,30 +146,30 @@ def generate_frames():
         cap = cv2.VideoCapture(temp_filename)
 
         while True:
-        frame = cap.read()
-
-        if frame is None:
-            break
-
-        frame = cv2.flip(frame, 1)
-        img = cv2.resize(frame, (1000, 500))
-        cvzone.putTextRect(img, 'AI Push Up Counter', [345, 30], thickness=2, border=2, scale=2.5)
-        pd_pushup.findPose(img, draw=0)
-        lmlist, _ = pd_pushup.findPosition(img, draw=0, bboxWithHands=0)
-
-        anglesp(lmlist, [lmlist[p] for p in (11, 13, 15, 12, 14, 16)], [(11, 13, 6), (13, 15, 6), (12, 14, 6),
-                                                                        (14, 16, 6), (11, 12, 6)], drawpoints=1)
-
-        _, jpeg = cv2.imencode('.jpg', frame)
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
-        
-        return Response(yield, mimetype='multipart/x-mixed-replace; boundary=frame')
-
-        # Process the video or do whatever you need with it
+            frame = cap.read()
+    
+            if frame is None:
+                break
+    
+            frame = cv2.flip(frame, 1)
+            img = cv2.resize(frame, (1000, 500))
+            cvzone.putTextRect(img, 'AI Push Up Counter', [345, 30], thickness=2, border=2, scale=2.5)
+            pd_pushup.findPose(img, draw=0)
+            lmlist, _ = pd_pushup.findPosition(img, draw=0, bboxWithHands=0)
+    
+            anglesp(lmlist, [lmlist[p] for p in (11, 13, 15, 12, 14, 16)], [(11, 13, 6), (13, 15, 6), (12, 14, 6),
+                                                                            (14, 16, 6), (11, 12, 6)], drawpoints=1)
+    
+            _, jpeg = cv2.imencode('.jpg', frame)
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
+            
+            return Response(yield, mimetype='multipart/x-mixed-replace; boundary=frame')
+    
+            # Process the video or do whatever you need with it
 
         # Delete the temporary file after usage
-        os.remove(temp_filename)       
+    os.remove(temp_filename)       
 
 
 #------------------------------------------------
