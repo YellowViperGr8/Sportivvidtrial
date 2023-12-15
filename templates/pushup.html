@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -78,10 +78,11 @@
     </style>
 </head>
 <body>
-    <h1>Video Processing</h1>
-    <form action="/process_video" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept="video/*">
-        <input type="submit" value="Upload and Process">
+
+    <h1>Video Upload</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="submit" value="Upload">
     </form>
 
     {% if video_path %}
