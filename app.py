@@ -546,6 +546,7 @@ def cht():
 
     return render_template('chtbot.html')
 
+openai.api_key_path = "../apikey"
 openai.api_key = os.environ.get('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')
 
 @app.route('/get_response', methods=['POST'])
