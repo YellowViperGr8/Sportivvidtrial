@@ -15,7 +15,7 @@ import openai
 from io import BytesIO
 import os
 from wtforms.validators import InputRequired
-
+import tempfile
 import select
 from werkzeug.utils import secure_filename
 import os
