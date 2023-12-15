@@ -9,5 +9,4 @@ imutils
 pyzbar
 transform
 openai==0.28
-openai migrate  
 
