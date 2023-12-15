@@ -119,40 +119,34 @@ def anglesp(lmlist, points, lines, drawpoints):
 
 
 
+UPLOAD_FOLDER = 'temp'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-
-def generate_frames(stream):
-
-            
-    #video_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
-    #file.save(video_path)
-    #cap = cv2.VideoCapture(file.stream)
-
-    #file.stream.seek(0)
-
-    # OpenCV processing
-    #cap = cv2.VideoCapture(file.stream)
-
-    #video_data = file.read()
-
-    # Create a stream from the in-memory bytes
-    #video_stream = io.BytesIO(video_data)
-
-    # OpenCV processing
-    #cap = cv2.VideoCapture(video_stream)
-
-    #nparr = np.frombuffer(file.read(), np.uint8)
-    #cap = cv2.VideoCapture(nparr)
-
-
-
+@app.route('/upload', methods=['POST'])
+def generate_frames():
     global video, pd_pushup, img, counterp, directionp, video_access_event_pushup, stop_video_flag
-
-
     global pd_pushup, img
 
-    while True:
-        frame = stream.read()
+
+    if 'file' not in request.files:
+        return 'No file part'
+
+    file = request.files['file']
+
+    if file.filename == '':
+        return 'No selected file'
+
+    if file:
+
+       
+        # Save the file to a temporary folder
+        temp_filename = os.path.join(app.config['UPLOAD_FOLDER'], tempfile.NamedTemporaryFile().name)
+        file.save(temp_filename)
+
+        cap = cv2.VideoCapture(temp_filename)
+
+        while True:
+        frame = cap.read()
 
         if frame is None:
             break
@@ -169,21 +163,13 @@ def generate_frames(stream):
         _, jpeg = cv2.imencode('.jpg', frame)
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
-
-
-
-
-
-@app.route('/process_video', methods=['POST'])
-def process_video():
-    file = request.files['file']
-
-    if file and allowed_file(file.filename):
-        cap = cv2.VideoCapture(file.stream)
-        return Response(generate_frames(cap), mimetype='multipart/x-mixed-replace; boundary=frame')
-
         
+        return Response(yield, mimetype='multipart/x-mixed-replace; boundary=frame')
 
+        # Process the video or do whatever you need with it
+
+        # Delete the temporary file after usage
+        os.remove(temp_filename)       
 
 
 #------------------------------------------------
