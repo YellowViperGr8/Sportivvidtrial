@@ -175,7 +175,9 @@ def process_video():
     file = request.files['file']
 
     if file and allowed_file(file.filename):
-        return Response(generate_frames(file), mimetype='multipart/x-mixed-replace; boundary=frame')
+        file.save('/tmp/input_video.mp4') # save the file to a temporary location
+        cap = cv2.VideoCapture('/tmp/input_video.mp4') # open the file using the temporary path
+        return Response(generate_frames(cap), mimetype='multipart/x-mixed-replace; boundary=frame')
         
 
 
