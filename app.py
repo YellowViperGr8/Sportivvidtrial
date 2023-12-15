@@ -547,7 +547,7 @@ def cht():
     return render_template('chtbot.html')
 
 
-openai.api_key = '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'
+openai.api_key = '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'
 
 @app.route('/get_response', methods=['POST'])
 def get_response():
